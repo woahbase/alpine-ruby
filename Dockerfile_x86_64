@@ -1,0 +1,23 @@
+ARG ARCH=frommakefile
+ARG DOCKERSRC=frommakefile
+ARG USERNAME=frommakefile
+#
+FROM ${USERNAME}/${DOCKERSRC}:${ARCH}
+#
+ARG UID=1000
+ARG GID=1000
+#
+RUN addgroup -g ${GID} -S alpine && \
+    adduser -u ${UID} -G alpine -h /home/alpine -D alpine
+RUN set -xe \
+    && apk add --no-cache --purge -uU ca-certificates tzdata ruby ruby-dev ruby-irb ruby-bundler ruby-json ruby-rake ruby-bigdecimal \
+    && echo 'gem: --no-document' > /etc/gemrc \
+    && echo 'install: --no-document' >> /etc/gemrc \
+    && echo 'update: --no-document' >> /etc/gemrc \
+    # Install and upgrade packages
+    # && gem install bundler json rake \
+    && gem cleanup \
+    && rm -rf /usr/lib/ruby/gems/*/cache/* \
+    && rm -rf /var/cache/apk/* /tmp/*
+# ENTRYPOINT ["/init"]
+# ENTRYPOINT ["/usr/bin/ruby"]
