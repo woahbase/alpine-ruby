@@ -14,9 +14,9 @@ RUN set -xe \
     && echo 'gem: --no-document' > /etc/gemrc \
     && echo 'install: --no-document' >> /etc/gemrc \
     && echo 'update: --no-document' >> /etc/gemrc \
-    # Install and upgrade packages
-    # && gem install bundler json rake \
-    && gem cleanup \
+# Install and upgrade packages
+# && gem install bundler json rake \
+# && gem cleanup \
     && rm -rf /usr/lib/ruby/gems/*/cache/* \
     && rm -rf /var/cache/apk/* /tmp/*
 # ENTRYPOINT ["/init"]
