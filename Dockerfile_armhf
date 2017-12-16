@@ -4,11 +4,11 @@ ARG USERNAME=frommakefile
 #
 FROM ${USERNAME}/${DOCKERSRC}:${ARCH}
 #
-ARG UID=1001
-ARG GID=1001
+ARG PUID=1001
+ARG PGID=1001
 #
-RUN addgroup -g ${GID} -S alpine && \
-    adduser -u ${UID} -G alpine -h /home/alpine -D alpine
+RUN addgroup -g ${PGID} -S alpine && \
+    adduser -u ${PUID} -G alpine -h /home/alpine -D alpine
 RUN set -xe \
     && apk add --no-cache --purge -uU ca-certificates tzdata ruby ruby-dev ruby-irb ruby-bundler ruby-json ruby-rake ruby-bigdecimal \
     && echo 'gem: --no-document' > /etc/gemrc \

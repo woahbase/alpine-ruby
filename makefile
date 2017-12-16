@@ -7,8 +7,8 @@ SHCOMMAND := /bin/bash
 SVCNAME   := ruby
 USERNAME  := woahbase
 
-UID       := $(shell id -u)
-GID       := $(shell id -u)# gid 100(users) usually pre exists
+PUID       := $(shell id -u)
+PGID       := $(shell id -g)# gid 100(users) usually pre exists
 
 DOCKERSRC := $(OPSYS)-s6#
 DOCKEREPO := $(OPSYS)-$(SVCNAME)
@@ -22,8 +22,8 @@ BUILDFLAGS := --rm --force-rm --compress -f $(CURDIR)/Dockerfile_$(ARCH) -t $(IM
 	--build-arg ARCH=$(ARCH) \
 	--build-arg DOCKERSRC=$(DOCKERSRC) \
 	--build-arg USERNAME=$(USERNAME) \
-	--build-arg UID=$(UID) \
-	--build-arg GID=$(GID) \
+	--build-arg PUID=$(PUID) \
+	--build-arg PGID=$(PGID) \
 	--label org.label-schema.build-date=$(shell date -u +"%Y-%m-%dT%H:%M:%SZ") \
 	--label org.label-schema.name=$(DOCKEREPO) \
 	--label org.label-schema.schema-version="1.0" \
@@ -38,7 +38,7 @@ OTHERFLAGS := # -v /etc/hosts:/etc/hosts:ro -v /etc/localtime:/etc/localtime:ro 
 PORTFLAGS  := #
 PROXYFLAGS := --build-arg http_proxy=$(http_proxy) --build-arg https_proxy=$(https_proxy) --build-arg no_proxy=$(no_proxy)
 
-RUNFLAGS   := -c 64 -m 32m # -e PGID=$(shell id -g) -e PUID=$(shell id -u)
+RUNFLAGS   := -c 64 -m 32m -e PGID=$(PGID) -e PUID=$(PUID)
 
 # -- }}}
 
