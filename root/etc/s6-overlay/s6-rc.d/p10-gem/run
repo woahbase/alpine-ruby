@@ -1,0 +1,24 @@
+#!/usr/bin/with-contenv bash
+set -e
+
+# install these packages using gem, specified on runtime
+GEM_HOME="${GEM_HOME:-/usr/local/bundle}";
+mkdir -p $GEM_HOME \
+    && chmod 1777 $GEM_HOME;
+
+# S6_GEM_PACKAGES=""; # list of packages passed at runtime, if required
+if [ -n "${S6_GEM_PACKAGES}" ]; then
+    gem install ${S6_GEM_PACKAGES};
+fi;
+
+# S6_BUNDLE_PROJECTDIR=""; # path to file passed at runtime, if required
+if [ -z "${S6_BUNDLE_SKIP_INSTALL}" ] \
+&& [ -f "${S6_BUNDLE_PROJECTDIR}/Gemfile" ] \
+|| [ -f "${S6_BUNDLE_PROJECTDIR}/Gemfile.lock" ]; then
+    # for deployment set BUNDLE_DEPLOYMENT=1
+    cd $S6_BUNDLE_PROJECTDIR \
+    && bundle install ${S6_BUNDLE_ARGS:- --jobs=4 --retry=2};
+    # && s6-setuidgid \
+    #     $(ls -ldn . | awk 'NR==1 {print $3":"$4}') \
+    #     bundle install ${S6_BUNDLE_ARGS:- --jobs=4 --retry=2};
+fi;
