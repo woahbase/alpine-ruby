@@ -26,7 +26,8 @@ RUN set -xe \
         # ruby-bundler \
         # ruby-irb \
         # ruby-rake \
-    && mkdir -p "$GEM_HOME" && chmod 1777 "$GEM_HOME" \
+    && mkdir -p "${GEM_HOME}" \
+    && chmod 1777 "${GEM_HOME}" \
     && echo 'gem: --no-document' > /etc/gemrc \
     && echo 'install: --no-document' >> /etc/gemrc \
     && echo 'update: --no-document' >> /etc/gemrc \
@@ -34,13 +35,16 @@ RUN set -xe \
     && gem update --system \
     && gem install bundler irb json rake \
     && gem cleanup \
-    && apk del --purge .build-deps ruby-dev \
-    && rm -rf /usr/lib/ruby/gems/*/cache/* \
-    && rm -rf /var/cache/apk/* /tmp/*
+#
+    && apk del --purge \
+        .build-deps \
+        ruby-dev \
+    && rm -rf /var/cache/apk/* /tmp/* \
+        /usr/lib/ruby/gems/*/cache/*
 #
 ENV \
-    BUNDLE_APP_CONFIG="$GEM_HOME" \
-    PATH=$GEM_HOME/bin:$PATH
+    BUNDLE_APP_CONFIG="${GEM_HOME}" \
+    PATH=${GEM_HOME}/bin:$PATH
 #
 COPY root/ /
 #
